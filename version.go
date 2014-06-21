@@ -1,5 +1,3 @@
-// Copyright 2014 Landjur. All rights reserved.
-
 package uuid
 
 // Version represents version of UUID.

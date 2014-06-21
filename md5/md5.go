@@ -1,10 +1,8 @@
-// Copyright 2014 Landjur. All rights reserved.
-
 package md5
 
 import (
-	"bitbucket.org/landjur-golang/uuid/utility"
 	"crypto/md5"
+	"github.com/landjur/go-uuid/utility"
 )
 
 // New returns a new uuid by namespace and name given.

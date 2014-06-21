@@ -1,10 +1,8 @@
-// Copyright 2014 Landjur. All rights reserved.
-
 package random
 
 import (
-	"bitbucket.org/landjur-golang/uuid/utility"
 	"crypto/rand"
+	"github.com/landjur/go-uuid/utility"
 )
 
 // New returns a new uuid randomly.

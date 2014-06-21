@@ -1,5 +1,3 @@
-// Copyright 2014 Landjur. All rights reserved.
-
 package utility
 
 // Layout returns the layout of given UUID.
