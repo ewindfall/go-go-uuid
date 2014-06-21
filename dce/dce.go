@@ -1,12 +1,10 @@
-// Copyright 2014 Landjur. All rights reserved.
-
 package dce
 
 import (
-	"bitbucket.org/landjur-golang/uuid/time"
-	"bitbucket.org/landjur-golang/uuid/utility"
 	"encoding/binary"
 	"errors"
+	"github.com/landjur/go-uuid/time"
+	"github.com/landjur/go-uuid/utility"
 	"os"
 )
 

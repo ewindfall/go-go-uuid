@@ -1,17 +1,15 @@
-// Copyright 2014 Landjur. All rights reserved.
-
 package uuid
 
 import (
-	"bitbucket.org/landjur-golang/uuid/dce"
-	"bitbucket.org/landjur-golang/uuid/md5"
-	"bitbucket.org/landjur-golang/uuid/random"
-	"bitbucket.org/landjur-golang/uuid/sha1"
-	"bitbucket.org/landjur-golang/uuid/time"
-	"bitbucket.org/landjur-golang/uuid/utility"
 	"bytes"
 	"errors"
 	"fmt"
+	"github.com/landjur/go-uuid/dce"
+	"github.com/landjur/go-uuid/md5"
+	"github.com/landjur/go-uuid/random"
+	"github.com/landjur/go-uuid/sha1"
+	"github.com/landjur/go-uuid/time"
+	"github.com/landjur/go-uuid/utility"
 )
 
 // Consts

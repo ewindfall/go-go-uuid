@@ -1,11 +1,9 @@
-// Copyright 2014 Landjur. All rights reserved.
-
 package time
 
 import (
-	"bitbucket.org/landjur-golang/uuid/utility"
 	"crypto/rand"
 	"encoding/binary"
+	"github.com/landjur/go-uuid/utility"
 	"net"
 	"sync"
 	"time"

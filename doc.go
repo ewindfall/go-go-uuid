@@ -1,5 +1,3 @@
-// Copyright 2014 Landjur. All rights reserved.
-
 /*
 
 Package uuid implement UUID V1, V2, V3, V4, V5 specified in RFC 4122.
