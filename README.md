@@ -1,32 +1,37 @@
-Golang UUID Package
-===================
+#Golang UUID Package
 
 The package implements UUID [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt).
 
-Usage
-=====
+##Usage
 
-*Generate V1 UUID: 
+###Import Package
 
-    uuid.NewV1UUID() 
-    uuid.NewTimeUUID()
+    import "github.com/landjur/go-uuid"
 
-*Generate V2 UUID: 
+###Generate Time-Based UUID
 
-    uuid.NewV2UUID(domain dce.Domain) 
-    uuid.NewDceUUID(domain dce.Domain)
+    uuid.NewTimeBased() (UUID, error)
+    uuid.NewV1() (UUID, error)
 
-*Generate V3 UUID:
-    
-    uuid.NewV3UUID(namespace, name string) 
-    uuid.NewMD5UUID(namespace, name string)
+###Generate DCE Security UUID
 
-*Generate V4 UUID: 
-	
-	uuid.NewV4UUID()
-	uuid.NewRandomUUID()
+    uuid.NewDCESecurity(uuid.UserDomain or uuid.GroupDomain)  (UUID, error)
+    uuid.NewV2(uuid.UserDomain or uuid.GroupDomain) (UUID, error)
 
-*Generate V5 UUID: 
-    
-    uuid.NewV5UUID(namespace, name string)
-    uuid.NewSHA1UUID(namespace, name string)
+###Generate Name-Based UUID uses MD5 hashing
+
+    uuid.NewNameBasedMD5(namespace, name string) (UUID, error)
+    uuid.NewV3(namespace, name string) (UUID, error)
+
+###Generate Randomly UUID
+
+    uuid.NewRandomly() (UUID, error)
+    uuid.NewV4() (UUID, error)
+
+###Generate Name-Based UUID uses SHA-1 hashing
+
+    uuid.NewNameBasedSHA1(namespace, name string) (UUID, error)
+    uuid.NewV5(namespace, name string) (UUID, error)
+
+##COPYRIGHT & LICENSE
+Copyright 2014 Landjur, Inc. Code released under the Apache License, Version 2.0.

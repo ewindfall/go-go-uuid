@@ -2,10 +2,11 @@ package md5
 
 import (
 	"crypto/md5"
-	"github.com/landjur/go-uuid/utility"
+	"github.com/landjur/go-uuid/layout"
+	"github.com/landjur/go-uuid/version"
 )
 
-// New returns a new uuid by namespace and name given.
+// New returns a new name-based uses MD5 hashing uuid.
 func New(namespace, name string) ([]byte, error) {
 	hash := md5.New()
 	_, err := hash.Write([]byte(namespace))
@@ -18,11 +19,11 @@ func New(namespace, name string) ([]byte, error) {
 	}
 
 	sum := hash.Sum(nil)
-	id := make([]byte, 16)
-	copy(id, sum)
+	uuid := make([]byte, 16)
+	copy(uuid, sum)
 
-	utility.SetVersion(id, 3) // Version 3
-	utility.SetLayout(id, 2)  // RFC4122 Layout
+	version.Set(uuid, version.NameBasedMD5)
+	layout.Set(uuid, layout.RFC4122)
 
-	return id, nil
+	return uuid, nil
 }

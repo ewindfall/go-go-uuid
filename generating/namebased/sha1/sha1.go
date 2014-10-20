@@ -2,10 +2,11 @@ package sha1
 
 import (
 	"crypto/sha1"
-	"github.com/landjur/go-uuid/utility"
+	"github.com/landjur/go-uuid/layout"
+	"github.com/landjur/go-uuid/version"
 )
 
-// New returns a new uuid by namespace and name given.
+// New returns a new name-based uses SHA-1 hashing uuid.
 func New(namespace, name string) ([]byte, error) {
 	hash := sha1.New()
 	_, err := hash.Write([]byte(namespace))
@@ -18,11 +19,11 @@ func New(namespace, name string) ([]byte, error) {
 	}
 
 	sum := hash.Sum(nil)
-	id := make([]byte, 16)
-	copy(id, sum)
+	uuid := make([]byte, 16)
+	copy(uuid, sum)
 
-	utility.SetVersion(id, 5) // Version 5
-	utility.SetLayout(id, 2)  // RFC4122 Layout
+	version.Set(uuid, version.NameBasedSHA1)
+	layout.Set(uuid, layout.RFC4122)
 
-	return id, nil
+	return uuid, nil
 }

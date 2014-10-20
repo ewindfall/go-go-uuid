@@ -1,33 +1,37 @@
 /*
 
-Package uuid implement UUID V1, V2, V3, V4, V5 specified in RFC 4122.
+Package uuid implement UUID specified in RFC 4122.
 
 Usage:
 
-Generate V1 UUID:
+Import Package:
 
-        uuid.NewV1UUID()
-        uuid.NewTimeUUID()
+		import "github.com/landjur/go-uuid"
 
-Generate V2 UUID:
+Generate Time-Based UUID:
 
-        uuid.NewV2UUID(domain Domain)
-        uuid.NewDceUUID(domain Domain)
+        uuid.NewTimeBased() (UUID, error)
+		uuid.NewV1() (UUID, error)
 
-Generate V3 UUID:
+Generate DCE Security UUID:
 
-        uuid.NewV3UUID(namespace, name string)
-        uuid.NewMD5UUID(namespace, name string)
+		uuid.NewDCESecurity(uuid.UserDomain or uuid.GroupDomain)  (UUID, error)
+		uuid.NewV2(uuid.UserDomain or uuid.GroupDomain) (UUID, error)
+
+Generate Name-Based UUID uses MD5 hashing:
+
+		uuid.NewNameBasedMD5(namespace, name string) (UUID, error)
+		uuid.NewV3(namespace, name string) (UUID, error)
 
 Generate V4 UUID:
 
-        uuid.NewV4UUID()
-        uuid.NewRandomUUID()
+        uuid.NewRandomly() (UUID, error)
+        uuid.NewV4() (UUID, error)
 
 Generate V5 UUID:
 
-        uuid.NewV5UUID(namespace, name string)
-        uuid.NewSHA1UUID(namespace, name string)
+		uuid.NewNameBasedSHA1(namespace, name string) (UUID, error)
+        uuid.NewV5(namespace, name string) (UUID, error)
 
 */
 package uuid

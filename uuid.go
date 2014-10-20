@@ -2,121 +2,119 @@ package uuid
 
 import (
 	"bytes"
-	"errors"
-	"fmt"
-	"github.com/landjur/go-uuid/dce"
-	"github.com/landjur/go-uuid/md5"
-	"github.com/landjur/go-uuid/random"
-	"github.com/landjur/go-uuid/sha1"
-	"github.com/landjur/go-uuid/time"
-	"github.com/landjur/go-uuid/utility"
+	"github.com/landjur/go-uuid/generating/dcesecurity"
+	"github.com/landjur/go-uuid/generating/namebased"
+	"github.com/landjur/go-uuid/generating/namebased/md5"
+	"github.com/landjur/go-uuid/generating/namebased/sha1"
+	"github.com/landjur/go-uuid/generating/randomly"
+	"github.com/landjur/go-uuid/generating/timebased"
+	"github.com/landjur/go-uuid/layout"
+	"github.com/landjur/go-uuid/style"
+	"github.com/landjur/go-uuid/version"
 )
 
-// Consts
 const (
-	// The standard namespaces for UUIDs
-	NamespaceDNS  = "6ba7b810-9dad-11d1-80b4-00c04fd430c8"
-	NamespaceURL  = "6ba7b811-9dad-11d1-80b4-00c04fd430c8"
-	NamespaceOID  = "6ba7b812-9dad-11d1-80b4-00c04fd430c8"
-	NamespaceX500 = "6ba7b814-9dad-11d1-80b4-00c04fd430c8"
+	StandardStyle    = style.Standard
+	WithoutDashStyle = style.WithoutDash
+)
+const (
+	UserDomain  = dcesecurity.DomainUser
+	GroupDomain = dcesecurity.DomainGroup
+)
+const (
+	NamespaceDNS  = namebased.NamespaceDNS
+	NamespaceURL  = namebased.NamespaceURL
+	NamespaceOID  = namebased.NamespaceOID
+	NamespaceX500 = namebased.NamespaceX500
 )
 
 var (
-	// The EmptyUUID is specified to have all 128 bits set to zero. Specified in RFC 4122(section 4.1.7).
-	Empty = new(UUID)
+	Nil = make(UUID, 16) // Nil UUID
 )
 
-// import dce.Domain
-var (
-	DomainUser  = dce.DomainUser
-	DomainGroup = dce.DomainGroup
-)
-
-// Errors
-var (
-	ErrLengthInvalid  = errors.New("uuid: length of UUID string is invalid, it should be 36")
-	ErrFormatInvalid  = errors.New("uuid: format of UUID string is invalid, it should be xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx [8-4-4-4-12])")
-	ErrLayoutInvalid  = errors.New("uuid: layout of UUID is invalid")
-	ErrVersionUnknown = errors.New("uuid: version of UUID is unknown")
-)
-
-// hex returns hex value for given char. Called by Parse.
-func hex(v byte) byte {
-	switch v {
-	case '0':
-		return 0x00
-	case '1':
-		return 0x01
-	case '2':
-		return 0x02
-	case '3':
-		return 0x03
-	case '4':
-		return 0x04
-	case '5':
-		return 0x05
-	case '6':
-		return 0x06
-	case '7':
-		return 0x07
-	case '8':
-		return 0x08
-	case '9':
-		return 0x09
-	case 'A', 'a':
-		return 0x0a
-	case 'B', 'b':
-		return 0x0b
-	case 'C', 'c':
-		return 0x0c
-	case 'D', 'd':
-		return 0x0d
-	case 'E', 'e':
-		return 0x0e
-	case 'F', 'f':
-		return 0x0f
+// NewTimeBased returns a new time-based uuid.
+func NewTimeBased() (UUID, error) {
+	uuid, err := timebased.New()
+	if err != nil {
+		return nil, err
 	}
 
-	return 0xff
+	return UUID(uuid), nil
 }
 
-// Parse returns instance of UUID by parse from string
-// It returns ErrLengthInvalid if length of UUID string is invalid.
-// It returns ErrFormatInvalid if format of UUID string is invalid.
-// It returns ErrLayoutInvalid if layout of UUID parsed is invalid.
-// It returns ErrVersionInvalid if version of UUID parsed is invalid.
-func Parse(v string) (*UUID, error) {
-	if len(v) != 36 {
-		return nil, ErrLengthInvalid
+// NewV1 call NewTimeBased function.
+func NewV1() (UUID, error) {
+	return NewTimeBased()
+}
+
+// NewDCESecurity returns a new DCE security uuid.
+func NewDCESecurity(domain dcesecurity.Domain) (UUID, error) {
+	uuid, err := dcesecurity.New(domain)
+	if err != nil {
+		return nil, err
 	}
 
-	// 8-4-4-4-12: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-	if v[8] != '-' || v[13] != '-' || v[18] != '-' || v[23] != '-' {
-		return nil, ErrFormatInvalid
+	return UUID(uuid), nil
+}
+
+// NewV2 calls NewDCESecurity function.
+func NewV2(domain dcesecurity.Domain) (UUID, error) {
+	return NewDCESecurity(domain)
+}
+
+// NewNameBasedMD5 returns a new name-based uuid uses MD5 hashing.
+func NewNameBasedMD5(namespace, name string) (UUID, error) {
+	uuid, err := md5.New(namespace, name)
+	if err != nil {
+		return nil, err
 	}
 
-	id := new(UUID)
+	return UUID(uuid), nil
+}
 
-	for i, v2 := range []int{0, 2, 4, 6, 9, 11, 14, 16, 19, 21, 24, 26, 28, 30, 32, 34} {
-		id[i] = (hex(v[v2]) << 4) | hex(v[v2+1])
+// NewV3 calls NewNameBasedMD5 function.
+func NewV3(namespace, name string) (UUID, error) {
+	return NewNameBasedMD5(namespace, name)
+}
+
+// NewRandomly returns a new randomly uuid.
+func NewRandomly() (UUID, error) {
+	uuid, err := randomly.New()
+	if err != nil {
+		return nil, err
 	}
 
-	if !id.Equal(Empty) {
-		if id.Layout() == LayoutInvalid {
-			return nil, ErrLayoutInvalid
-		}
+	return UUID(uuid), nil
+}
 
-		if id.Version() == VersionUnknown {
-			return nil, ErrVersionUnknown
-		}
+// NewV4 calls NewRandomly function.
+func NewV4() (UUID, error) {
+	return NewRandomly()
+}
+
+// NewNameBasedSHA1 returns a new name-based uuid uses SHA-1 hashing.
+func NewNameBasedSHA1(namespace, name string) (UUID, error) {
+	uuid, err := sha1.New(namespace, name)
+	if err != nil {
+		return nil, err
 	}
 
-	return id, nil
+	return UUID(uuid), nil
+}
+
+// NewV5 calls NewNameBasedSHA1 function.
+func NewV5(namespace, name string) (UUID, error) {
+	return NewNameBasedSHA1(namespace, name)
+}
+
+// Parse parses the uuid string.
+func Parse(uuidString string) (UUID, error) {
+	return style.Parse(uuidString)
 }
 
 // IsValid checks the passed value whether is a valid UUID string.
-func IsValid(v string) bool {
-	_, err := Parse(v)
+func IsValid(uuidString string) bool {
+	_, err := Parse(uuidString)
 	if err != nil {
 		return false
 	}
@@ -124,121 +122,34 @@ func IsValid(v string) bool {
 	return true
 }
 
-// NewTimeUUID returns a new Version 1 UUID.
-// Same as NewV1UUID function.
-func NewTimeUUID() (*UUID, error) {
-	u, err := time.New()
-	if err != nil {
-		return nil, err
-	}
-
-	uuid := new(UUID)
-	copy(uuid[:], u)
-
-	return uuid, nil
-}
-
-// NewV1UUID call NewTimeUUID directly.
-func NewV1UUID() (*UUID, error) {
-	return NewTimeUUID()
-}
-
-// NewDceUUID returns a new Version 2 UUID.
-// Same as NewV2UUID function.
-func NewDceUUID(domain dce.Domain) (*UUID, error) {
-	u, err := dce.New(domain)
-	if err != nil {
-		return nil, err
-	}
-
-	uuid := new(UUID)
-	copy(uuid[:], u)
-
-	return uuid, nil
-}
-
-// NewV2UUID call NewDceUUID directly.
-func NewV2UUID(domain dce.Domain) (*UUID, error) {
-	return NewDceUUID(domain)
-}
-
-// NewMD5UUID returns a new Version 3 UUID.
-// Same as NewV3UUID function.
-func NewMD5UUID(namespace, name string) (*UUID, error) {
-	u, err := md5.New(namespace, name)
-	if err != nil {
-		return nil, err
-	}
-
-	uuid := new(UUID)
-	copy(uuid[:], u)
-
-	return uuid, nil
-}
-
-// NewV3UUID call NewMD5UUID directly.
-func NewV3UUID(namespace, name string) (*UUID, error) {
-	return NewMD5UUID(namespace, name)
-}
-
-// NewRandomUUID returns a new Version 4 UUID.
-// Same as NewV4UUID function.
-// Same as New function.
-func NewRandomUUID() (*UUID, error) {
-	u, err := random.New()
-	if err != nil {
-		return nil, err
-	}
-
-	uuid := new(UUID)
-	copy(uuid[:], u)
-
-	return uuid, nil
-}
-
-// NewV4UUID call NewRandomUUID directly.
-func NewV4UUID() (*UUID, error) {
-	return NewRandomUUID()
-}
-
-// NewSHA1UUID returns a new Version 5 UUID.
-// Same as NewV5UUID function.
-func NewSHA1UUID(namespace, name string) (*UUID, error) {
-	u, err := sha1.New(namespace, name)
-	if err != nil {
-		return nil, err
-	}
-
-	uuid := new(UUID)
-	copy(uuid[:], u)
-
-	return uuid, nil
-}
-
-// NewV5UUID call NewSHA1UUID directly.
-func NewV5UUID(namespace, name string) (*UUID, error) {
-	return NewSHA1UUID(namespace, name)
-}
-
-// UUID respresents a UUID object compliant with specification in RFC 4122.
-type UUID [16]byte
+// UUID respresents an UUID type compliant with specification in RFC 4122.
+type UUID []byte
 
 // Layout returns layout of UUID.
-func (this UUID) Layout() Layout {
-	return Layout(utility.Layout(this[:]))
+func (this UUID) Layout() layout.Layout {
+	return layout.Get(this)
+}
+
+func (this UUID) SetLayout(l layout.Layout) {
+	layout.Set(this, l)
 }
 
 // Version returns version of UUID.
-func (this UUID) Version() Version {
-	return Version(utility.Version(this[:]))
+func (this UUID) Version() version.Version {
+	return version.Get(this)
 }
 
 // Equal returns true if current uuid equal to passed uuid.
-func (this UUID) Equal(v *UUID) bool {
-	return bytes.Equal(this[:], (*v)[:])
+func (this UUID) Equal(another UUID) bool {
+	return bytes.Equal(this, another)
 }
 
-// String returns formatted string for UUID (format[8-4-4-4-12]: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)
+// String returns the string of UUID (standard style: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx | 8-4-4-4-12)
 func (this UUID) String() string {
-	return fmt.Sprintf("%08x-%04x-%04x-%04x-%012x", this[:4], this[4:6], this[6:8], this[8:10], this[10:])
+	return style.Format(this, style.Standard, false)
+}
+
+// Format returns the formatted string of UUID.
+func (this UUID) Format(s style.Style, upper bool) string {
+	return style.Format(this, s, upper)
 }
