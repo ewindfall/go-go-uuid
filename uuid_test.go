@@ -2,6 +2,8 @@ package uuid
 
 import (
 	"fmt"
+	"github.com/landjur/go-uuid/layout"
+	"github.com/landjur/go-uuid/version"
 	"testing"
 	"time"
 )
@@ -9,92 +11,92 @@ import (
 func TestParse(t *testing.T) {
 	s := "00000000-0000-0000-0000-000000000000"
 	start := time.Now()
-	u, err := Parse(s)
+	uuid, err := Parse(s)
 	spent := time.Since(start)
 	if err != nil {
-		t.Fatalf("uuid parse failed: %s", err)
+		t.Fatalf("UUID parsing failed: %s", err)
 	}
 
-	if !u.Equal(Empty) {
-		t.Fatal("uuid parsed should equal emtpy")
+	if !uuid.Equal(Nil) {
+		t.Fatal("UUID should equal to nil uuid")
 	}
 
-	fmt.Printf("Parse UUID(%s) spent %v seconds (%v nanoseconds)\n", u, spent.Seconds(), spent.Nanoseconds())
+	fmt.Printf("Parse UUID(%s) spent %v seconds (%v nanoseconds)\n", uuid, spent.Seconds(), spent.Nanoseconds())
 }
 
 func TestUUID(t *testing.T) {
 	// V1
-	uuid, err := NewTimeUUID()
+	uuid, err := NewTimeBased()
 	if err != nil {
 		t.Fatalf("create time uuid failed: %s", err)
 	}
-	version := uuid.Version()
-	if version != VersionTime {
-		t.Fatalf("Time Version UUID has wrong version: %s", version)
+	v := uuid.Version()
+	if v != version.TimeBased {
+		t.Fatalf("Time-Based UUID has wrong version: %s", v)
 	}
-	layout := uuid.Layout()
-	if layout != LayoutRFC4122 {
-		t.Fatalf("Time Version UUID has wrong layout: %s", layout)
+	l := uuid.Layout()
+	if l != layout.RFC4122 {
+		t.Fatalf("Time-Based UUID has wrong layout: %s", l)
 	}
-	fmt.Println("Version 1 (Time Based):\t", uuid)
+	fmt.Println("Version 1 (Time Based):", uuid, "     ", uuid.Format(WithoutDashStyle, false))
 
 	// V2
-	uuid, err = NewDceUUID(DomainUser)
+	uuid, err = NewDCESecurity(UserDomain)
 	if err != nil {
 		t.Fatalf("create dce uuid failed: %s", err)
 	}
-	version = uuid.Version()
-	if version != VersionDCE {
-		t.Fatalf("DCE Version UUID has wrong version: %s", version)
+	v = uuid.Version()
+	if v != version.DCESecurity {
+		t.Fatalf("DCE Security UUID has wrong version: %s", v)
 	}
-	layout = uuid.Layout()
-	if layout != LayoutRFC4122 {
-		t.Fatalf("DCE Version UUID has wrong layout: %s", layout)
+	l = uuid.Layout()
+	if l != layout.RFC4122 {
+		t.Fatalf("DCE Security UUID has wrong layout: %s", l)
 	}
-	fmt.Println("Version 2 (DCE):\t", uuid)
+	fmt.Println("Version 2 (DCE Security):", uuid, "     ", uuid.Format(WithoutDashStyle, false))
 
 	// V3
-	uuid, err = NewMD5UUID("namespace", "name")
+	uuid, err = NewNameBasedMD5("namespace", "name")
 	if err != nil {
 		t.Fatalf("create md5 uuid failed: %s", err)
 	}
-	version = uuid.Version()
-	if version != VersionMD5 {
-		t.Fatalf("MD5 Version UUID has wrong version: %s", version)
+	v = uuid.Version()
+	if v != version.NameBasedMD5 {
+		t.Fatalf("Name-Based (MD5) UUID has wrong version: %s", v)
 	}
-	layout = uuid.Layout()
-	if layout != LayoutRFC4122 {
-		t.Fatalf("MD5 Version UUID has wrong layout: %s", layout)
+	l = uuid.Layout()
+	if l != layout.RFC4122 {
+		t.Fatalf("Name-Based (MD5) UUID has wrong layout: %s", l)
 	}
-	fmt.Println("Version 3 (MD5):\t", uuid)
+	fmt.Println("Version 3 (Name-Based uses MD5 hashing):", uuid, "     ", uuid.Format(WithoutDashStyle, false))
 
 	// V4
-	uuid, err = NewRandomUUID()
+	uuid, err = NewRandomly()
 	if err != nil {
-		t.Fatalf("create random uuid failed: %s", err)
+		t.Fatalf("create randomly uuid failed: %s", err)
 	}
-	version = uuid.Version()
-	if version != VersionRandom {
-		t.Fatalf("Random Version UUID has wrong version: %s", version)
+	v = uuid.Version()
+	if v != version.Randomly {
+		t.Fatalf("Randomly UUID has wrong version: %s", v)
 	}
-	layout = uuid.Layout()
-	if layout != LayoutRFC4122 {
-		t.Fatalf("Random Version UUID has wrong layout: %s", layout)
+	l = uuid.Layout()
+	if l != layout.RFC4122 {
+		t.Fatalf("Randomly UUID has wrong layout: %s", l)
 	}
-	fmt.Println("Version 4 (Randomly):\t", uuid)
+	fmt.Println("Version 4 (Randomly):", uuid, "", uuid.Format(WithoutDashStyle, false))
 
 	// V5
-	uuid, err = NewSHA1UUID("namespace", "name")
+	uuid, err = NewNameBasedSHA1("namespace", "name")
 	if err != nil {
 		t.Fatalf("create sha1 uuid failed: %s", err)
 	}
-	version = uuid.Version()
-	if version != VersionSHA1 {
-		t.Fatalf("SHA1 Version UUID has wrong version: %s", version)
+	v = uuid.Version()
+	if v != version.NameBasedSHA1 {
+		t.Fatalf("Name-Based (SHA1) UUID has wrong version: %s", v)
 	}
-	layout = uuid.Layout()
-	if layout != LayoutRFC4122 {
-		t.Fatalf("SHA1 Version UUID has wrong layout: %s", layout)
+	l = uuid.Layout()
+	if l != layout.RFC4122 {
+		t.Fatalf("Name-Based (SHA1) UUID has wrong layout: %s", l)
 	}
-	fmt.Println("Version 5 (SHA1):\t", uuid)
+	fmt.Println("Version 5 (Name-Based uses SHA-1 hashing):", uuid, "     ", uuid.Format(WithoutDashStyle, false))
 }
