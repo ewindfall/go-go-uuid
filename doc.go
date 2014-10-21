@@ -4,10 +4,6 @@ Package uuid implement UUID specified in RFC 4122.
 
 Usage:
 
-Import Package:
-
-		import "github.com/landjur/go-uuid"
-
 Generate Time-Based UUID:
 
         uuid.NewTimeBased() (UUID, error)
@@ -15,8 +11,8 @@ Generate Time-Based UUID:
 
 Generate DCE Security UUID:
 
-		uuid.NewDCESecurity(uuid.UserDomain or uuid.GroupDomain)  (UUID, error)
-		uuid.NewV2(uuid.UserDomain or uuid.GroupDomain) (UUID, error)
+		uuid.NewDCESecurity(uuid.DomainUser or uuid.DomainGroup)  (UUID, error)
+		uuid.NewV2(uuid.DomainUser or uuid.DomainGroup) (UUID, error)
 
 Generate Name-Based UUID uses MD5 hashing:
 

@@ -15,8 +15,8 @@ The package implements UUID [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt).
 
 ###Generate DCE Security UUID
 
-    uuid.NewDCESecurity(uuid.UserDomain or uuid.GroupDomain)  (UUID, error)
-    uuid.NewV2(uuid.UserDomain or uuid.GroupDomain) (UUID, error)
+    uuid.NewDCESecurity(uuid.DomainUser or uuid.DomainGroup)  (UUID, error)
+    uuid.NewV2(uuid.DomainUser or uuid.DomainGroup) (UUID, error)
 
 ###Generate Name-Based UUID uses MD5 hashing
 
@@ -32,6 +32,12 @@ The package implements UUID [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt).
 
     uuid.NewNameBasedSHA1(namespace, name string) (UUID, error)
     uuid.NewV5(namespace, name string) (UUID, error)
+
+###Formatting & Parsing
+    
+    (UUID Instance).Format(style.Style, upper bool) string
+    uuid.Parse(string) (UUID, error)
+    
 
 ##COPYRIGHT & LICENSE
 Copyright 2014 Landjur, Inc. Code released under the Apache License, Version 2.0.
