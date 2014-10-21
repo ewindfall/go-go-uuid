@@ -14,12 +14,12 @@ import (
 )
 
 const (
-	StandardStyle    = style.Standard
-	WithoutDashStyle = style.WithoutDash
+	StyleStandard    = style.Standard
+	StyleWithoutDash = style.WithoutDash
 )
 const (
-	UserDomain  = dcesecurity.DomainUser
-	GroupDomain = dcesecurity.DomainGroup
+	DomainUser  = dcesecurity.DomainUser
+	DomainGroup = dcesecurity.DomainGroup
 )
 const (
 	NamespaceDNS  = namebased.NamespaceDNS

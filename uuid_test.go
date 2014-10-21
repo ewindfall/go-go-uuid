@@ -38,10 +38,10 @@ func TestUUID(t *testing.T) {
 	if l != layout.RFC4122 {
 		t.Fatalf("Time-Based UUID has wrong layout: %s", l)
 	}
-	fmt.Println("Version 1 (Time Based):", uuid, "     ", uuid.Format(WithoutDashStyle, false))
+	fmt.Println("Version 1 (Time Based):", uuid, "     ", uuid.Format(StyleWithoutDash, false))
 
 	// V2
-	uuid, err = NewDCESecurity(UserDomain)
+	uuid, err = NewDCESecurity(DomainUser)
 	if err != nil {
 		t.Fatalf("create dce uuid failed: %s", err)
 	}
@@ -53,7 +53,7 @@ func TestUUID(t *testing.T) {
 	if l != layout.RFC4122 {
 		t.Fatalf("DCE Security UUID has wrong layout: %s", l)
 	}
-	fmt.Println("Version 2 (DCE Security):", uuid, "     ", uuid.Format(WithoutDashStyle, false))
+	fmt.Println("Version 2 (DCE Security):", uuid, "     ", uuid.Format(StyleWithoutDash, false))
 
 	// V3
 	uuid, err = NewNameBasedMD5("namespace", "name")
@@ -68,7 +68,7 @@ func TestUUID(t *testing.T) {
 	if l != layout.RFC4122 {
 		t.Fatalf("Name-Based (MD5) UUID has wrong layout: %s", l)
 	}
-	fmt.Println("Version 3 (Name-Based uses MD5 hashing):", uuid, "     ", uuid.Format(WithoutDashStyle, false))
+	fmt.Println("Version 3 (Name-Based uses MD5 hashing):", uuid, "     ", uuid.Format(StyleWithoutDash, false))
 
 	// V4
 	uuid, err = NewRandomly()
@@ -83,7 +83,7 @@ func TestUUID(t *testing.T) {
 	if l != layout.RFC4122 {
 		t.Fatalf("Randomly UUID has wrong layout: %s", l)
 	}
-	fmt.Println("Version 4 (Randomly):", uuid, "", uuid.Format(WithoutDashStyle, false))
+	fmt.Println("Version 4 (Randomly):", uuid, "", uuid.Format(StyleWithoutDash, false))
 
 	// V5
 	uuid, err = NewNameBasedSHA1("namespace", "name")
@@ -98,5 +98,5 @@ func TestUUID(t *testing.T) {
 	if l != layout.RFC4122 {
 		t.Fatalf("Name-Based (SHA1) UUID has wrong layout: %s", l)
 	}
-	fmt.Println("Version 5 (Name-Based uses SHA-1 hashing):", uuid, "     ", uuid.Format(WithoutDashStyle, false))
+	fmt.Println("Version 5 (Name-Based uses SHA-1 hashing):", uuid, "     ", uuid.Format(StyleWithoutDash, false))
 }
