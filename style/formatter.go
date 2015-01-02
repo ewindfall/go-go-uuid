@@ -21,7 +21,7 @@ func Format(uuid []byte, style Style, upper bool) string {
 	}
 
 	if upper {
-		return strings.ToLower(formatted)
+		return strings.ToUpper(formatted)
 	}
 
 	return formatted
