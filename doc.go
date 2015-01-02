@@ -6,7 +6,7 @@ Usage:
 
 Generate Time-Based UUID:
 
-        uuid.NewTimeBased() (UUID, error)
+		uuid.NewTimeBased() (UUID, error)
 		uuid.NewV1() (UUID, error)
 
 Generate DCE Security UUID:
