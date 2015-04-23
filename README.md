@@ -1,43 +1,51 @@
-#Golang UUID Package
+#Go-UUID 
 
-The package implements UUID [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt).
+The go-uuid package implements UUID [RFC 4122](http://www.ietf.org/rfc/rfc4122.txt) for golang.
 
 ##Usage
 
-###Import Package
+###Generating 
 
-    import "github.com/landjur/go-uuid"
+####Time-Based (Version 1)
 
-###Generate Time-Based UUID
+    import "github.com/wayn3h0/go-uuid/timebased"
 
-    uuid.NewTimeBased() (UUID, error)
-    uuid.NewV1() (UUID, error)
+    timebased.New() (uuid.UUID, error)
 
-###Generate DCE Security UUID
+####DCE Security (Version 2)
 
-    uuid.NewDCESecurity(uuid.DomainUser or uuid.DomainGroup)  (UUID, error)
-    uuid.NewV2(uuid.DomainUser or uuid.DomainGroup) (UUID, error)
+    import "github.com/wayn3h0/go-uuid/dcesecurity"
 
-###Generate Name-Based UUID uses MD5 hashing
+    dcesecurity.New(dcesecurity.Domain) (uuid.UUID, error)
 
-    uuid.NewNameBasedMD5(namespace, name string) (UUID, error)
-    uuid.NewV3(namespace, name string) (UUID, error)
+####Name-Based uses MD5 hashing (Version 3)
 
-###Generate Randomly UUID
+    import "github.com/wayn3h0/go-uuid/namebased/md5"
 
-    uuid.NewRandomly() (UUID, error)
-    uuid.NewV4() (UUID, error)
+    md5.New(namespace, name string) (uuid.UUID, error)
 
-###Generate Name-Based UUID uses SHA-1 hashing
+####Random (Version 4)
 
-    uuid.NewNameBasedSHA1(namespace, name string) (UUID, error)
-    uuid.NewV5(namespace, name string) (UUID, error)
+    import "github.com/wayn3h0/go-uuid/random"
+
+    random.New() (uuid.UUID, error)
+
+####Name-Based uses SHA-1 hashing (Version 5)
+
+    import "github.com/wayn3h0/go-uuid/namebased/sha1"
+
+    sha1.New(namespace, name string) (uuid.UUID, error)
+
+###Styles
+
+* Standard: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx (8-4-4-4-12, length: 36)
+* Without Dash: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx (length: 32)
 
 ###Formatting & Parsing
-    
-    (UUID Instance).Format(style.Style, upper bool) string
-    uuid.Parse(string) (UUID, error)
-    
 
-##COPYRIGHT & LICENSE
-Copyright 2014 Landjur, Inc. Code released under the Apache License, Version 2.0.
+    import "github.com/wayn3h0/go-uuid"
+    
+    (UUID Instance).String() string             // format to standard style
+    (UUID Instance).Format(uuid.Style) string   // format to uuid.StyleStandard or uuid.StyleWithoutDash
+
+    uuid.Parse(string) (uuid.UUID, error)       // parse from UUID string

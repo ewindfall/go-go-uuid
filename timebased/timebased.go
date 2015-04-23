@@ -3,8 +3,7 @@ package timebased
 import (
 	"crypto/rand"
 	"encoding/binary"
-	"github.com/landjur/go-uuid/layout"
-	"github.com/landjur/go-uuid/version"
+	"github.com/wayn3h0/go-uuid"
 	"net"
 	"sync"
 	"time"
@@ -23,12 +22,12 @@ var (
 )
 
 // New returns a new time-based uuid.
-func New() ([]byte, error) {
+func New() (uuid.UUID, error) {
 	// Get and release a global lock
 	locker.Lock()
 	defer locker.Unlock()
 
-	uuid := make([]byte, 16)
+	instance := make(uuid.UUID, 16)
 
 	// get timestamp
 	now := time.Now().UTC()
@@ -51,10 +50,10 @@ func New() ([]byte, error) {
 	timeHigh := uint16((timestamp >> 48) & 0xfff)
 
 	// network byte order(BigEndian)
-	binary.BigEndian.PutUint32(uuid[0:], timeLow)
-	binary.BigEndian.PutUint16(uuid[4:], timeMiddle)
-	binary.BigEndian.PutUint16(uuid[6:], timeHigh)
-	binary.BigEndian.PutUint16(uuid[8:], clockSequence)
+	binary.BigEndian.PutUint32(instance[0:], timeLow)
+	binary.BigEndian.PutUint16(instance[4:], timeMiddle)
+	binary.BigEndian.PutUint16(instance[6:], timeHigh)
+	binary.BigEndian.PutUint16(instance[8:], clockSequence)
 
 	// get node id(mac address)
 	if nodeID == nil {
@@ -74,16 +73,16 @@ func New() ([]byte, error) {
 		if nodeID == nil {
 			nodeID = make([]byte, 6)
 			n, err := rand.Read(nodeID)
-			if n != len(uuid) || err != nil {
+			if n != len(instance) || err != nil {
 				return nil, err
 			}
 		}
 	}
 
-	copy(uuid[10:], nodeID)
+	copy(instance[10:], nodeID)
 
-	version.Set(uuid, version.TimeBased)
-	layout.Set(uuid, layout.RFC4122)
+	uuid.SetVersion(instance, uuid.VersionTimeBased)
+	uuid.SetLayout(instance, uuid.LayoutRFC4122)
 
-	return uuid, nil
+	return instance, nil
 }
