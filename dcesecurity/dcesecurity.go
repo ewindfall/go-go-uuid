@@ -2,7 +2,7 @@ package dcesecurity
 
 import (
 	"encoding/binary"
-	"errors"
+	"github.com/wayn3h0/go-errors"
 	"github.com/wayn3h0/go-uuid"
 	"github.com/wayn3h0/go-uuid/timebased"
 	"os"

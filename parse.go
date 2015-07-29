@@ -1,7 +1,7 @@
 package uuid
 
 import (
-	"errors"
+	"github.com/wayn3h0/go-errors"
 )
 
 // hex returns hex value for given char.
