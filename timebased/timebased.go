@@ -3,6 +3,7 @@ package timebased
 import (
 	"crypto/rand"
 	"encoding/binary"
+	"github.com/wayn3h0/go-errors"
 	"github.com/wayn3h0/go-uuid"
 	"net"
 	"sync"
@@ -37,8 +38,11 @@ func New() (uuid.UUID, error) {
 	} else {
 		b := make([]byte, 2)
 		n, err := rand.Read(b)
-		if n != len(b) || err != nil {
-			return nil, err
+		if err != nil {
+			return nil, errors.Wrap(err, "uuid/timebased: generating pseudorandom numbers for clock sequence failed")
+		}
+		if n != len(b) {
+			return nil, errors.New("uuid/timebased: generating pseudorandom numbers for clock sequence failed")
 		}
 		clockSequence = uint16(int(b[0])<<8 | int(b[1])) // set to a random value (network byte order)
 	}
@@ -73,8 +77,11 @@ func New() (uuid.UUID, error) {
 		if nodeID == nil {
 			nodeID = make([]byte, 6)
 			n, err := rand.Read(nodeID)
-			if n != len(instance) || err != nil {
-				return nil, err
+			if err != nil {
+				return nil, errors.Wrap(err, "uuid/timebased: generating pseudorandom numbers for node id failed")
+			}
+			if n != len(instance) {
+				return nil, errors.New("uuid/timebased: generating pseudorandom numbers for node id failed")
 			}
 		}
 	}

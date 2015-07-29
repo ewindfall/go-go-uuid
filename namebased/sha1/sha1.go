@@ -2,6 +2,7 @@ package sha1
 
 import (
 	"crypto/sha1"
+	"github.com/wayn3h0/go-errors"
 	"github.com/wayn3h0/go-uuid"
 )
 
@@ -10,11 +11,11 @@ func New(namespace, name string) (uuid.UUID, error) {
 	hash := sha1.New()
 	_, err := hash.Write([]byte(namespace))
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "uuid/namebased/sha1: computing hash value failed")
 	}
 	_, err = hash.Write([]byte(name))
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "uuid/namebased/sha1: computing hash value failed")
 	}
 
 	sum := hash.Sum(nil)
